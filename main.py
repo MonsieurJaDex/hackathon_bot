@@ -5,6 +5,7 @@ from aiogram import Dispatcher, Bot, types
 from aiogram.filters import CommandStart
 
 from config import AppConfig
+from keyboards import inline_main_keyboard
 
 # initializing bot dispatcher object
 dp = Dispatcher()
@@ -14,7 +15,8 @@ dp = Dispatcher()
 @dp.message(CommandStart())
 async def echo(message: types.Message):
     await message.answer(
-        f"Приветствую, {message.from_user.first_name}! Я - бот, который занимается хранением фото и видео файлов 😁"
+        f"Приветствую, {message.from_user.first_name}! Я - бот, который занимается хранением фото и видео файлов 😁",
+        reply_markup=inline_main_keyboard,
     )
 
 
