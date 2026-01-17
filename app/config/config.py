@@ -12,7 +12,7 @@ class AppConfig(BaseSettings):
     postgres_dsn: PostgresDsn
 
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file="app/.env",
         env_nested_delimiter="__",
         case_sensitive=False,
         extra="ignore",

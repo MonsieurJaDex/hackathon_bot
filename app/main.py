@@ -1,23 +1,16 @@
 import asyncio
 import logging
 
-from aiogram import Dispatcher, Bot, types
-from aiogram.filters import CommandStart
+from aiogram import Dispatcher, Bot
 
-from config import AppConfig
-from keyboards import inline_main_keyboard
+from app.config import AppConfig
+from app.handlers import messages_router
 
 # initializing bot dispatcher object
 dp = Dispatcher()
 
-
-# basic test echo handler
-@dp.message(CommandStart())
-async def echo(message: types.Message):
-    await message.answer(
-        f"Приветствую, {message.from_user.first_name}! Я - бот, который занимается хранением фото и видео файлов 😁",
-        reply_markup=inline_main_keyboard,
-    )
+# including routers in dispatcher
+dp.include_routers(messages_router)
 
 
 # main application function

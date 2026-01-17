@@ -14,9 +14,9 @@ venv/
 # ===============================
 # Environment variables
 # ===============================
-.env
-.env.*
-!.env.example
+app/.env
+app/.env.example
+!app/.env.example
 
 # ===============================
 # Lint / format
