@@ -4,13 +4,13 @@ import logging
 from aiogram import Dispatcher, Bot
 
 from app.config import AppConfig
-from app.handlers import messages_router
+from app.handlers import messages_router, callbacks_router, fsm_router
 
 # initializing bot dispatcher object
 dp = Dispatcher()
 
 # including routers in dispatcher
-dp.include_routers(messages_router)
+dp.include_routers(messages_router, callbacks_router, fsm_router)
 
 
 # main application function

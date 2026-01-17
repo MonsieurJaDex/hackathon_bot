@@ -1,18 +1,29 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from app.misc import MainMenuMethods
+from app.misc import MainMenuCallback
 
 # inline keyboard for main control panel definition
 main_keyboard: InlineKeyboardMarkup = InlineKeyboardMarkup(
     inline_keyboard=[
         [
             InlineKeyboardButton(
-                text="[🎥] Добавить медиафайл (фото/видео)", callback_data="1"
+                text="[🎥] Добавить медиафайл (фото/видео)",
+                callback_data=MainMenuCallback(method=MainMenuMethods.AddMedia).pack(),
             )
         ],
         [
             InlineKeyboardButton(
-                text="[🔎] Найти существующий медиафайл", callback_data="2"
+                text="[🔎] Найти существующий медиафайл",
+                callback_data=MainMenuCallback(method=MainMenuMethods.FindMedia).pack(),
             )
         ],
-        [InlineKeyboardButton(text="[📒] Найти мои медиафайлы", callback_data="3")],
+        [
+            InlineKeyboardButton(
+                text="[📒] Найти мои медиафайлы",
+                callback_data=MainMenuCallback(
+                    method=MainMenuMethods.FindMyMedia
+                ).pack(),
+            )
+        ],
     ]
 )
