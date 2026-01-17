@@ -19,9 +19,9 @@ main_keyboard: InlineKeyboardMarkup = InlineKeyboardMarkup(
         ],
         [
             InlineKeyboardButton(
-                text="[📒] Найти мои медиафайлы",
+                text="[📒] Найти все доступные медиафайлы",
                 callback_data=MainMenuCallback(
-                    method=MainMenuMethods.FindMyMedia
+                    method=MainMenuMethods.FindAllMedia
                 ).pack(),
             )
         ],
