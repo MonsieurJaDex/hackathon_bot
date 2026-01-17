@@ -61,7 +61,7 @@ async def process_media(message: types.Message, state: FSMContext):
         await message.answer("Теги должны быть только в текстовом формате!")
         return
 
-    data = await state.update_data(description=message.text.strip().replace(" ", ""))
+    data = await state.update_data(tags=message.text.strip().replace(" ", ""))
 
     await state.clear()
 
