@@ -39,7 +39,7 @@ async def find_media_handler(query: CallbackQuery, callback_data: CallbackData):
 @router.callback_query(
     MainMenuCallback.filter(F.method == MainMenuMethods.FindAllMedia)
 )
-async def find_my_media_handler(query: CallbackQuery, callback_data: CallbackData):
+async def find_all_media_handler(query: CallbackQuery, callback_data: CallbackData):
     await query.answer(
         text="Find AllMedia",
     )
