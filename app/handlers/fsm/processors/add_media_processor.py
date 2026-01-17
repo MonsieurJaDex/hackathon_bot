@@ -1,7 +1,5 @@
-from multiprocessing.reduction import steal_handle
-from typing import Union
-
 from aiogram import Router, types
+from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.enums import ContentType
 from aiogram.types import InaccessibleMessage
@@ -11,23 +9,32 @@ from app.handlers.fsm import AddMediaStatesGroup
 router = Router()
 
 
+@router.message(Command("cancel"))
+async def cancel_processing(message: types.Message, state: FSMContext) -> None:
+    current_state = await state.get_data()
+    if current_state is None:
+        return
+
+    await state.clear()
+    await message.answer("Отправка медиа прервана 👍")
+
+
 @router.message(AddMediaStatesGroup.mediaFile)
-async def process_media(message: types.Message, state: FSMContext):
+async def process_media(message: types.Message, state: FSMContext) -> None:
     if isinstance(message, InaccessibleMessage):
         return
 
-    if message.content_type not in [ContentType.VIDEO, ContentType.PHOTO]:
+    if message.content_type not in [
+        ContentType.VIDEO,
+        ContentType.PHOTO,
+        ContentType.DOCUMENT,
+    ]:
         await message.answer("Медиафайлы могут быть только фото или видео 😅")
+        print(f"Got invalid content type: {message.content_type}")
         return
 
-    # use only 1 photo, because telegram by default stores photos as list[PhotoSize]
-    if message.content_type == ContentType.PHOTO and len(message.photo) > 1:
-        await message.answer(
-            "Пока функционала альбомов не предусмотрено, поэтому будет сохранено только первое фото"
-        )
-
     await state.update_data(
-        mediaFile=message.video if message.video else message.photo[0]
+        mediaFile=message.video if message.video else message.photo[-1]
     )
 
     await message.answer(
@@ -37,7 +44,7 @@ async def process_media(message: types.Message, state: FSMContext):
 
 
 @router.message(AddMediaStatesGroup.description)
-async def process_media(message: types.Message, state: FSMContext):
+async def process_media(message: types.Message, state: FSMContext) -> None:
     if isinstance(message, InaccessibleMessage):
         return
 
@@ -53,7 +60,7 @@ async def process_media(message: types.Message, state: FSMContext):
 
 
 @router.message(AddMediaStatesGroup.tags)
-async def process_media(message: types.Message, state: FSMContext):
+async def process_media(message: types.Message, state: FSMContext) -> None:
     if isinstance(message, InaccessibleMessage):
         return
 
@@ -66,5 +73,5 @@ async def process_media(message: types.Message, state: FSMContext):
     await state.clear()
 
     await message.answer(
-        f"{message.from_user.first_name}, ваше медиа было успешно сохранено 😊\nЕго уникальный ID: {data['mediaFile'].file_id}"
+        f"{message.from_user.first_name}, ваше медиа было успешно сохранено 😊\nЕго уникальный ID: {data}"
     )
