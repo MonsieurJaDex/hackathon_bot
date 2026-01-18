@@ -27,7 +27,6 @@ async def process_media(message: types.Message, state: FSMContext) -> None:
     if message.content_type not in [
         ContentType.VIDEO,
         ContentType.PHOTO,
-        ContentType.DOCUMENT,
     ]:
         await message.answer("Медиафайлы могут быть только фото или видео 😅")
         print(f"Got invalid content type: {message.content_type}")
