@@ -1,4 +1,3 @@
-from pydantic import PostgresDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -9,7 +8,15 @@ class AppConfig(BaseSettings):
 
     bot_token: str
 
-    postgres_dsn: PostgresDsn
+    DB_NAME: str
+    DB_USER: str
+    DB_PASSWORD: str
+    DB_HOST: str
+    DB_PORT: int
+
+    @property
+    def postgres_dsn(self):
+        return f"postgres+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
 
     model_config = SettingsConfigDict(
         env_file="app/.env",
