@@ -1,10 +1,15 @@
+import logging
+
 from aiogram import Router, types
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.enums import ContentType
-from aiogram.types import InaccessibleMessage
+from aiogram.types import InaccessibleMessage, Video, PhotoSize
 
 from app.handlers.fsm import AddMediaStatesGroup
+from app.database.schemas import MediaAddDTO
+from app.database.service import MediaService
+from app.misc import ValidContentType
 
 router = Router()
 
@@ -71,6 +76,25 @@ async def process_media(message: types.Message, state: FSMContext) -> None:
 
     await state.clear()
 
+    mediaFile: Video | PhotoSize = data["mediaFile"]
+    description: str = data["description"]
+    # tags: list[str] = data["tags"]
+
+    dto = MediaAddDTO.model_validate(
+        {
+            "file_id": mediaFile.file_id,
+            "file_unique_id": mediaFile.file_unique_id,
+            "file_type": (
+                ValidContentType.VIDEO
+                if (isinstance(mediaFile, Video))
+                else ValidContentType.PHOTO
+            ),
+            "description": description,
+        }
+    )
+
+    media_id = await MediaService().insert_media(dto)
+
     await message.answer(
-        f"{message.from_user.first_name}, ваше медиа было успешно сохранено 😊\nЕго уникальный ID: {data}"
+        f"{message.from_user.first_name}, ваше медиа было успешно сохранено 😊\nЕго уникальный ID: {media_id}"
     )

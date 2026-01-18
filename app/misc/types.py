@@ -5,6 +5,16 @@ from aiogram.enums import ContentType
 
 from app.misc import MainMenuMethods
 
+# patterns
+
+class Singleton(object):
+    _instance = None
+    def __new__(cls, *args, **kwargs):
+        if not isinstance(cls._instance, cls):
+            cls._instance = object.__new__(cls, *args, **kwargs)
+        return cls._instance
+
+
 # callback types
 
 # callback object for main menu

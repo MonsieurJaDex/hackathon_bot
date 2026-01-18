@@ -5,8 +5,8 @@ import sys
 from aiogram import Dispatcher, Bot
 
 from app.config import appConfig
+from app.database.engine import init_database, database_healthcheck
 from app.handlers import messages_router, callbacks_router, fsm_router
-from app.misc import database_healthcheck
 
 # initializing bot dispatcher object
 dp = Dispatcher()
@@ -27,6 +27,11 @@ async def main():
     status, exception = await database_healthcheck()
     if not status:
         logging.getLogger().error("Database healthcheck failed: " + str(exception))
+        sys.exit(1)
+
+    status, exception = await init_database()
+    if not status:
+        logging.getLogger().error("Database initialization failed: " + str(exception))
         sys.exit(1)
 
     await dp.start_polling(bot)
