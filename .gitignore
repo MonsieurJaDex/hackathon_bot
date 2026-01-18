@@ -44,3 +44,4 @@ app/.env.example
 # Docker
 # ===============================
 *.pid
+volumes/*

@@ -1,0 +1,18 @@
+services:
+  postgres:
+    image: postgres:14.20
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "./volumes"
