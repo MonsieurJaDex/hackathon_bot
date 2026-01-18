@@ -4,9 +4,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 # app configuration object definition
 class AppConfig(BaseSettings):
 
-    debug: bool = False
+    DEBUG: bool = False
 
-    bot_token: str
+    BOT_TOKEN: str
 
     DB_NAME: str
     DB_USER: str
@@ -16,7 +16,7 @@ class AppConfig(BaseSettings):
 
     @property
     def postgres_dsn(self):
-        return f"postgres+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+        return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
 
     model_config = SettingsConfigDict(
         env_file="app/.env",

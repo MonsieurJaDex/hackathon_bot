@@ -1,5 +1,3 @@
-from typing import Tuple
-
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 
 from app.config import appConfig
@@ -12,7 +10,3 @@ engine = create_async_engine(
 )
 
 session_factory = async_sessionmaker(bind=engine)
-
-
-def database_healthcheck() -> Tuple[bool, Exception | None]:
-    return False, None
