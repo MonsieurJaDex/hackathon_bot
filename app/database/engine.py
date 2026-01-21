@@ -19,7 +19,7 @@ engine = create_async_engine(
 session_factory = async_sessionmaker(bind=engine)
 
 
-# database healthcheck function
+# database health check function
 async def database_healthcheck() -> Tuple[bool, Exception | None]:
     try:
         async with engine.connect() as session:
