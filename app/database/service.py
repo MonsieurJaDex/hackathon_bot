@@ -1,7 +1,4 @@
-from typing import List
-
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
-from sqlalchemy.util import await_only
 
 from app.database.crud import CRUDMedia
 from app.database.engine import session_factory

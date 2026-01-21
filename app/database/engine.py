@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from app.config import appConfig
 from app.database.models import Base
 
+# SQLAlchemy engine definition
 engine = create_async_engine(
     url=appConfig.postgres_dsn,
     echo=True,
@@ -13,9 +14,11 @@ engine = create_async_engine(
     max_overflow=10,
 )
 
+# async session factory
 session_factory = async_sessionmaker(bind=engine)
 
 
+# database healthcheck function
 async def database_healthcheck() -> Tuple[bool, Exception | None]:
     try:
         async with engine.connect() as session:
@@ -25,6 +28,7 @@ async def database_healthcheck() -> Tuple[bool, Exception | None]:
         return False, e
 
 
+# database initialization function
 async def init_database() -> Tuple[bool, Exception | None]:
     try:
         async with engine.connect() as conn:

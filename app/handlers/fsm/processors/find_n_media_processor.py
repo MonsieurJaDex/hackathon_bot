@@ -11,20 +11,26 @@ from app.handlers.fsm.find_n_media import FindNMediaByIdStatesGroup
 router = Router()
 
 
+# processing N days to database service
 @router.message(FindNMediaByIdStatesGroup.days)
 async def process_find_n_media(message: types.Message, state: FSMContext) -> None:
+
+    # checking message content type
     if message.content_type != ContentType.TEXT:
         await message.answer("Пожалуйста, введите корректное количество дней.")
         return
 
+    # prepare variable
     days = message.text.strip()
 
+    # days validation
     if not days.isdigit() or int(days) < 1:
         await message.answer("Пожалуйста, введите корректное количество дней.")
         return
 
     await state.clear()
 
+    # get files from database service
     media_list: List[MediaContent] = await MediaService().get_latest_n_media(
         n=int(days)
     )

@@ -11,7 +11,7 @@ from app.handlers import messages_router, callbacks_router, fsm_router
 # initializing bot dispatcher object
 dp = Dispatcher()
 
-# including routers in dispatcher
+# including combined routers in dispatcher
 dp.include_routers(messages_router, callbacks_router, fsm_router)
 
 
@@ -29,11 +29,15 @@ async def main():
         logging.getLogger().error("Database healthcheck failed: " + str(exception))
         sys.exit(1)
 
+    # tables creation
     status, exception = await init_database()
     if not status:
-        logging.getLogger().error("Database initialization failed: " + str(exception))
+        logging.getLogger().error(
+            "Database with tables initialization failed: " + str(exception)
+        )
         sys.exit(1)
 
+    # start polling
     await dp.start_polling(bot)
 
 

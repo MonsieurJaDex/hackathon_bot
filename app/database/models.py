@@ -1,7 +1,6 @@
 import datetime
 from typing import Annotated
 
-from sqlalchemy import text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 from app.misc import ValidContentType

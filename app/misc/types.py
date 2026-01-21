@@ -8,6 +8,7 @@ from app.misc import MainMenuMethods
 # patterns
 
 
+# singleton pattern realization
 class Singleton(object):
     _instance = None
 
@@ -28,6 +29,7 @@ class MainMenuCallback(CallbackData, prefix="menu"):
 # custom types
 
 
+# enum for telegram content types those allowed to be processed
 class ValidContentType(Enum):
     PHOTO = ContentType.PHOTO
     VIDEO = ContentType.VIDEO

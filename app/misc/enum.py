@@ -1,6 +1,7 @@
 from enum import Enum
 
 
+# enum for main menu callbacks
 class MainMenuMethods(Enum):
     AddMedia = "add_media"
     FindMedia = "find_media"

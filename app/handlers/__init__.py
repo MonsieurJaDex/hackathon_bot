@@ -6,12 +6,15 @@ from .messages import start_router
 from .callbacks import main_menu_router
 from .fsm import add_media_router, find_media_router, find_n_media_router
 
+# combined router for messages
 messages_router = Router()
 messages_router.include_routers(start_router)
 
+# combined router for callbacks
 callbacks_router = Router()
 callbacks_router.include_routers(main_menu_router)
 
+# combined router for FSM
 fsm_router = Router()
 fsm_router.include_routers(add_media_router, find_media_router, find_n_media_router)
 

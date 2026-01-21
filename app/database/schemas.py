@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from app.misc import ValidContentType
 
 
+# media DTO scheme
 class MediaDTO(BaseModel):
     id: Optional[int] = None
     file_id: str

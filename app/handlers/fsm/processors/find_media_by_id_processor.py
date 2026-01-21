@@ -10,27 +10,34 @@ from app.misc import ValidContentType
 router = Router()
 
 
+# processing ID of file to database service
 @router.message(FindMediaByIdStatesGroup.mediaId)
 async def find_media_by_id(message: types.Message, state: FSMContext) -> None:
+    # checking message content type
     if message.content_type != ContentType.TEXT:
         await message.answer("Пожалуйста, введите корректный ID.")
         return
 
+    # media_id validation
     media_id = message.text.strip()
     if not media_id.isdigit():
         await message.answer("Пожалуйста, введите корректный ID.")
         return
 
     media_id = int(media_id)
+
+    # get record from database service
     media: MediaContent = await MediaService().get_media_by_id(media_id)
     if not media:
         await message.answer(f"Медиафайла с ID {media_id} не найдено 😥")
         await state.clear()
         return
 
+    # prepare metadata for sending to user
     file = media.file_id
     caption = f"ID: {media.id}\nОписание: {media.description or ''}"
 
+    # check file_type and send photo/video to user
     if media.file_type == ValidContentType.PHOTO:
         await message.answer_photo(photo=file, caption=caption)
     else:
