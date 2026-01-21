@@ -1,3 +1,4 @@
+import logging
 from typing import Tuple
 
 from sqlalchemy import text
@@ -9,7 +10,7 @@ from app.database.models import Base
 # SQLAlchemy engine definition
 engine = create_async_engine(
     url=appConfig.postgres_dsn,
-    echo=True,
+    echo=appConfig.DEBUG,
     pool_size=5,
     max_overflow=10,
 )

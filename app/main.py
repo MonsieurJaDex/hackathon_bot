@@ -19,6 +19,9 @@ dp.include_routers(messages_router, callbacks_router, fsm_router)
 async def main():
     # set level of logging (to be changed)
     logging.basicConfig(level=logging.INFO if appConfig.DEBUG else logging.WARN)
+    logging.getLogger("sqlalchemy.engine").setLevel(
+        logging.INFO if appConfig.DEBUG else logging.WARN
+    )
 
     # initialize bot instance and start polling
     bot = Bot(token=appConfig.BOT_TOKEN)
