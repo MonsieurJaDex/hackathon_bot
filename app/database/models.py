@@ -1,6 +1,7 @@
 import datetime
 from typing import Annotated
 
+from sqlalchemy import String
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 from app.misc import ValidContentType
@@ -39,7 +40,7 @@ class MediaContent(Base):
     file_type: Mapped[ValidContentType]
 
     # description of user's media file
-    description: Mapped[str]
+    description: Mapped[str] = mapped_column(String(250))
 
     # datetime of record creation
     created_at: Mapped[datetime.datetime] = mapped_column(

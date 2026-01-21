@@ -44,6 +44,11 @@ async def process_media_description(message: types.Message, state: FSMContext) -
         await message.answer("Описание должно быть только текстовым!")
         return
 
+    # description length checking
+    if len(message.text.strip()) > 250:
+        await message.answer("Описание не должно превышать 250 символов!")
+        return
+
     # store description and send data to database layer (service)
     data = await state.update_data(description=message.text)
 
