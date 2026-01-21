@@ -25,5 +25,13 @@ main_keyboard: InlineKeyboardMarkup = InlineKeyboardMarkup(
                 ).pack(),
             )
         ],
+        [
+            InlineKeyboardButton(
+                text="[📅] Получить медиафайлы за последние N дней",
+                callback_data=MainMenuCallback(
+                    method=MainMenuMethods.FindLatestNMedia
+                ).pack(),
+            )
+        ],
     ]
 )

@@ -44,11 +44,19 @@ class MediaContent(Base):
 
     # datetime of record creation
     created_at: Mapped[datetime.datetime] = mapped_column(
-        server_default=text("TIMEZONE('utc', now())")
+        default=datetime.datetime.now()
     )
 
     # datetime of record last update
     updated_at: Mapped[datetime.datetime] = mapped_column(
-        server_default=text("TIMEZONE('utc', now())"),
+        default=datetime.datetime.now(),
         onupdate=lambda: datetime.datetime.now(datetime.UTC),
     )
+
+    # magic method for "as-string" object representation
+    def __str__(self):
+        return (
+            f"[{self.id}] {'Фото' if self.file_type == ValidContentType.PHOTO else 'Видео'}"
+            f" загруженное {str(self.created_at)[:-7]} -> {self.file_unique_id} ({self.description[:50]}"
+            f"{'...' if len(self.description) > 50 else ''})"
+        )

@@ -1,13 +1,15 @@
+import datetime
+
 from sqlalchemy import insert, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from .schemas import MediaAddDTO
+from .schemas import MediaDTO
 from .models import MediaContent
 
 
 class CRUDMedia:
     @staticmethod
-    async def create(session: AsyncSession, media: MediaAddDTO) -> int:
+    async def create(session: AsyncSession, media: MediaDTO) -> int:
         stmt = (
             insert(MediaContent)
             .values(
@@ -28,4 +30,21 @@ class CRUDMedia:
         stmt = select(MediaContent)
         response = await session.execute(stmt)
 
-        return list(response.fetchall())
+        return response.scalars().all()
+
+    @staticmethod
+    async def find_by_id(session: AsyncSession, media_id: int) -> MediaContent | None:
+        stmt = select(MediaContent).where(MediaContent.id == media_id)
+        response = await session.execute(stmt)
+
+        return response.scalar_one_or_none()
+
+    @staticmethod
+    async def find_n_media(session: AsyncSession, n: int) -> list[MediaContent]:
+        stmt = select(MediaContent).where(
+            MediaContent.created_at
+            >= datetime.datetime.now() - datetime.timedelta(days=n)
+        )
+        response = await session.execute(stmt)
+
+        return response.scalars().all()

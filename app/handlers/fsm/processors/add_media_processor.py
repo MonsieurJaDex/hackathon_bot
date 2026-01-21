@@ -7,34 +7,21 @@ from aiogram.enums import ContentType
 from aiogram.types import InaccessibleMessage, Video, PhotoSize
 
 from app.handlers.fsm import AddMediaStatesGroup
-from app.database.schemas import MediaAddDTO
+from app.database.schemas import MediaDTO
 from app.database.service import MediaService
 from app.misc import ValidContentType
 
 router = Router()
 
 
-@router.message(Command("cancel"))
-async def cancel_processing(message: types.Message, state: FSMContext) -> None:
-    current_state = await state.get_data()
-    if current_state is None:
-        return
-
-    await state.clear()
-    await message.answer("Отправка медиа прервана 👍")
-
-
 @router.message(AddMediaStatesGroup.mediaFile)
 async def process_media(message: types.Message, state: FSMContext) -> None:
-    if isinstance(message, InaccessibleMessage):
-        return
-
     if message.content_type not in [
         ContentType.VIDEO,
         ContentType.PHOTO,
     ]:
         await message.answer("Медиафайлы могут быть только фото или видео 😅")
-        print(f"Got invalid content type: {message.content_type}")
+        logging.getLogger().warning(f"Got invalid content type: {message.content_type}")
         return
 
     await state.update_data(
@@ -49,38 +36,18 @@ async def process_media(message: types.Message, state: FSMContext) -> None:
 
 @router.message(AddMediaStatesGroup.description)
 async def process_media(message: types.Message, state: FSMContext) -> None:
-    if isinstance(message, InaccessibleMessage):
-        return
-
     if message.content_type != ContentType.TEXT:
         await message.answer("Описание должно быть только текстовым!")
         return
 
-    await state.update_data(description=message.text)
-
-    await message.answer("Укажите теги для вашего файла через запятую 😊\nПример: ")
-
-    await state.set_state(AddMediaStatesGroup.tags)
-
-
-@router.message(AddMediaStatesGroup.tags)
-async def process_media(message: types.Message, state: FSMContext) -> None:
-    if isinstance(message, InaccessibleMessage):
-        return
-
-    if message.content_type != ContentType.TEXT:
-        await message.answer("Теги должны быть только в текстовом формате!")
-        return
-
-    data = await state.update_data(tags=message.text.strip().replace(" ", ""))
+    data = await state.update_data(description=message.text)
 
     await state.clear()
 
     mediaFile: Video | PhotoSize = data["mediaFile"]
     description: str = data["description"]
-    # tags: list[str] = data["tags"]
 
-    dto = MediaAddDTO.model_validate(
+    dto = MediaDTO.model_validate(
         {
             "file_id": mediaFile.file_id,
             "file_unique_id": mediaFile.file_unique_id,
